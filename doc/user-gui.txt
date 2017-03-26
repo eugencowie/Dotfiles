@@ -30,4 +30,9 @@ sudo pacman -S bspwm sxhkd alsa-utils rofi feh ranger
 sudo aura -Ax polybar
 (cd System/cfg; stow polybar)
 
+# https://wiki.archlinux.org/index.php/Termite
+
+sudo pacman -S termite
+(cd System/cfg; stow termite)
+
 # vim: ft=sh:

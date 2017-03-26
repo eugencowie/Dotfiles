@@ -1,3 +1,7 @@
+# terminal emulator
+super + Return
+	termite
+
 # program launcher
 super + d
 	rofi -show drun
