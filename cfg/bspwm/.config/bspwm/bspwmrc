@@ -1,0 +1,11 @@
+#!/bin/sh
+
+sxhkd &
+
+bspc monitor -d 1 2 3 4 5
+
+bspc config border_width   0
+bspc config window_gap     30
+bspc config click_to_focus on
+
+[ -x ~/.fehbg ] && ~/.fehbg
