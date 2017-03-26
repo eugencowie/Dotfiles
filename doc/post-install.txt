@@ -7,17 +7,31 @@ passwd fred
 
 sed -i "/^# %wheel ALL=(ALL) ALL/s/^# //" /etc/sudoers
 
+# https://wiki.archlinux.org/index.php/Netctl#Wireless_.28WPA-PSK.29
+
+wifi-menu -o
+
 # https://wiki.archlinux.org/index.php/Netctl#Wired
 
-echo "Interface=enp0s3" > /etc/netctl/wired
+echo "Interface=enp0s25" > /etc/netctl/wired
 echo "Connection=ethernet" >> /etc/netctl/wired
 echo "IP=dhcp" >> /etc/netctl/wired
 netctl enable wired
 netctl start wired
 
-# https://wiki.archlinux.org/index.php/Systemd-timesyncd
+# https://wiki.archlinux.org/index.php/Laptop#Network_time_syncing
 
-timedatectl set-ntp true
+pacman -S chrony
+echo "server 0.pool.ntp.org offline" > /etc/chrony.conf
+echo "server 1.pool.ntp.org offline" >> /etc/chrony.conf
+echo "server 2.pool.ntp.org offline" >> /etc/chrony.conf
+echo "server 3.pool.ntp.org offline" >> /etc/chrony.conf
+echo "driftfile /var/lib/chrony/drift" >> /etc/chrony.conf
+echo "rtconutc" >> /etc/chrony.conf
+echo "rtcsync" >> /etc/chrony.conf
+systemctl enable chrony
+systemctl start chrony
+chronyc online
 
 # https://wiki.archlinux.org/index.php/Uncomplicated_Firewall
 
@@ -26,5 +40,24 @@ ufw default deny
 ufw allow from 192.168.0.0/24
 ufw enable
 systemctl enable ufw
+
+# https://wiki.archlinux.org/index.php/Laptop#Battery_state
+
+pacman -S acpi
+
+# https://wiki.archlinux.org/index.php/Hard_Drive_Active_Protection_System
+
+pacman -S tp_smapi hdapsd
+echo "options hdaps invert=5" > /etc/modprobe.d/hdaps.conf
+
+# https://wiki.archlinux.org/index.php/Tp_smapi#General_Way
+
+echo 40 > /sys/devices/platform/smapi/BAT0/start_charge_thresh
+echo 80 > /sys/devices/platform/smapi/BAT0/stop_charge_thresh
+
+# https://wiki.archlinux.org/index.php/Power_management#Bluetooth
+
+pacman -S rfkill
+systemctl enable rfkill-block@bluetooth
 
 # vim: ft=sh:
