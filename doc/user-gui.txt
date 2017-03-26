@@ -14,4 +14,10 @@ sudo pacman -S arc-gtk-theme
 sudo aura -Ax numix-circle-icon-theme-git
 (cd System/cfg; stow gtk)
 
+# https://wiki.archlinux.org/index.php/LightDM
+
+sudo pacman -S lightdm-gtk-greeter
+sudo systemctl enable lightdm
+(cd System/sys; lightdm/install)
+
 # vim: ft=sh:
