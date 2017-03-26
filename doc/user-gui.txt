@@ -1,7 +1,7 @@
 # https://wiki.archlinux.org/index.php/Xorg
 
 sudo pacman -S xorg-server
-(cd System/sys; xorg/install)
+(cd System/sys; sudo xorg/install)
 (cd System/cfg; stow xrandr)
 
 # https://wiki.archlinux.org/index.php/X_resources
@@ -24,7 +24,7 @@ sudo aura -Ax numix-circle-icon-theme-git
 
 sudo pacman -S lightdm-gtk-greeter
 sudo systemctl enable lightdm
-(cd System/sys; lightdm/install)
+(cd System/sys; sudo lightdm/install)
 
 # https://wiki.archlinux.org/index.php/Bspwm
 
@@ -40,5 +40,10 @@ sudo aura -Ax polybar
 
 sudo pacman -S termite
 (cd System/cfg; stow termite)
+
+# https://wiki.archlinux.org/index.php/Firefox
+
+sudo pacman -S firefox
+(cd System/sys; sudo firefox/install)
 
 # vim: ft=sh:
