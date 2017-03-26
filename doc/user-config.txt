@@ -13,5 +13,6 @@ rm -r aura-bin
 
 sudo pacman -S stow git
 git clone https://github.com/eugencowie/Dotfiles.git System
+rm ~/.bashrc; (cd System/cfg; stow bash)
 
 # vim: ft=sh:
