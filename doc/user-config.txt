@@ -16,4 +16,9 @@ git clone https://github.com/eugencowie/Dotfiles.git System
 rm ~/.bashrc; (cd System/cfg; stow bash)
 (cd System/cfg; stow git)
 
+# https://wiki.archlinux.org/index.php/Fish
+
+sudo pacman -S fish
+(cd System/cfg; stow fish)
+
 # vim: ft=sh:
