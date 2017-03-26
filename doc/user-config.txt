@@ -1,0 +1,12 @@
+# https://wiki.archlinux.org/index.php/AUR_helpers
+
+sudo pacman -S --asdeps abs
+curl -O "https://aur.archlinux.org/cgit/aur.git/snapshot/aura-bin.tar.gz"
+tar -xvf aura-bin.tar.gz
+rm aura-bin.tar.gz
+(cd aura-bin; makepkg)
+AURAPKG=$(ls -1 aura-bin | grep pkg.tar.xz)
+[ "$AURAPKG" != "" ] && sudo pacman -U "aura-bin/$AURAPKG"
+rm -r aura-bin
+
+# vim: ft=sh:
