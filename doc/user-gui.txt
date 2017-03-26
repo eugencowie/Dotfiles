@@ -4,6 +4,11 @@ sudo pacman -S xorg-server
 (cd System/sys; xorg/install)
 (cd System/cfg; stow xrandr)
 
+# https://wiki.archlinux.org/index.php/X_resources
+
+sudo pacman -S xorg-xrdb
+(cd System/cfg; stow xrdb)
+
 # https://wiki.archlinux.org/index.php/Fonts
 
 sudo pacman -S ttf-dejavu

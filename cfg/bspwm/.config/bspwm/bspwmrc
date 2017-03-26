@@ -11,4 +11,6 @@ bspc config click_to_focus on
 
 [ -x ~/.screenlayout/default.sh ] && ~/.screenlayout/default.sh
 [ -x ~/.fehbg ] && ~/.fehbg
+
+[ -e ~/.Xresources ] && xrdb -merge ~/.Xresources
 [ -e ~/.config/polybar/config ] && polybar default &
