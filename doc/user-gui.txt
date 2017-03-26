@@ -25,4 +25,9 @@ sudo systemctl enable lightdm
 sudo pacman -S bspwm sxhkd alsa-utils rofi feh ranger
 (cd System/cfg; stow bspwm)
 
+# https://github.com/jaagr/polybar/#getting-started
+
+sudo aura -Ax polybar
+(cd System/cfg; stow polybar)
+
 # vim: ft=sh:
