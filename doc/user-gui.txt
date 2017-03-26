@@ -8,4 +8,10 @@ sudo pacman -S xorg-server
 sudo pacman -S ttf-dejavu
 sudo aura -Ax ttf-font-awesome
 
+# https://wiki.archlinux.org/index.php/GTK#Themes
+
+sudo pacman -S arc-gtk-theme
+sudo aura -Ax numix-circle-icon-theme-git
+(cd System/cfg; stow gtk)
+
 # vim: ft=sh:
