@@ -16,3 +16,4 @@ install_file() {
 
 install_file "etc/X11/xorg.conf.d/00-keyboard.conf"
 install_file "etc/X11/xorg.conf.d/50-mouse.conf"
+install_file "etc/X11/xorg.conf.d/90-monitor.conf"
