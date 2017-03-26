@@ -2,6 +2,10 @@
 
 loadkeys uk
 
+# https://wiki.archlinux.org/index.php/Power_management#Bluetooth
+
+rfkill block bluetooth
+
 # https://wiki.archlinux.org/index.php/GNU_Parted#BIOS.2FMBR_examples
 
 parted /dev/sdb mklabel msdos
@@ -42,6 +46,10 @@ mount /dev/mapper/cryptroot /mnt
 mkdir /mnt/boot
 mount /dev/mapper/cryptboot /mnt/boot
 
+# https://wiki.archlinux.org/index.php/Netctl#Wireless_.28WPA-PSK.29
+
+wifi-menu -o
+
 # https://wiki.archlinux.org/index.php/Mirrors#Server-side_ranking
 
 curl "https://www.archlinux.org/mirrorlist/?country=GB&use_mirror_status=on" | sed "s/^#//" > /etc/pacman.d/mirrorlist
@@ -63,6 +71,10 @@ arch-chroot /mnt sh -c 'echo LANG=en_GB.UTF-8 > /etc/locale.conf'
 arch-chroot /mnt sh -c 'echo KEYMAP=uk > /etc/vconsole.conf'
 arch-chroot /mnt sh -c 'echo archlinux > /etc/hostname'
 arch-chroot /mnt passwd
+
+# https://wiki.archlinux.org/index.php/Installation_guide#Network_configuration
+
+arch-chroot /mnt pacman -S --asdeps wpa_supplicant dialog
 
 # https://wiki.archlinux.org/index.php/Swap#Swap_file
 
