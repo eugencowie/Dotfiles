@@ -2,6 +2,7 @@
 
 sudo pacman -S xorg-server
 (cd System/sys; xorg/install)
+(cd System/cfg; stow xrandr)
 
 # https://wiki.archlinux.org/index.php/Fonts
 
