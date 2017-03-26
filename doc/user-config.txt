@@ -21,4 +21,9 @@ rm ~/.bashrc; (cd System/cfg; stow bash)
 sudo pacman -S fish
 (cd System/cfg; stow fish)
 
+# https://wiki.archlinux.org/index.php/Neovim#Replacing_vi_and_vim_with_neovim
+
+sudo aura -Ax neovim-drop-in
+(cd System/cfg; stow neovim)
+
 # vim: ft=sh:
