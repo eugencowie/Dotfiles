@@ -35,4 +35,9 @@ sudo aura -Ax polybar
 sudo pacman -S termite
 (cd System/cfg; stow termite)
 
+# https://wiki.archlinux.org/index.php/Firefox
+
+sudo pacman -S firefox
+(cd System/sys; sudo firefox/install)
+
 # vim: ft=sh:
