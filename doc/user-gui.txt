@@ -1,0 +1,11 @@
+# https://wiki.archlinux.org/index.php/Xorg
+
+sudo pacman -S xorg-server
+(cd System/sys; xorg/install)
+
+# https://wiki.archlinux.org/index.php/Fonts
+
+sudo pacman -S ttf-dejavu
+sudo aura -Ax ttf-font-awesome
+
+# vim: ft=sh:
