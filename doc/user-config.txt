@@ -9,4 +9,9 @@ AURAPKG=$(ls -1 aura-bin | grep pkg.tar.xz)
 [ "$AURAPKG" != "" ] && sudo pacman -U "aura-bin/$AURAPKG"
 rm -r aura-bin
 
+# http://brandon.invergo.net/news/2012-05-26-using-gnu-stow-to-manage-your-dotfiles.html
+
+sudo pacman -S stow git
+git clone https://github.com/eugencowie/Dotfiles.git System
+
 # vim: ft=sh:
