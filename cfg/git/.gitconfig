@@ -1,0 +1,7 @@
+[user]
+	name = Eugén Cowie
+	email = eugencowie@users.noreply.github.com
+[alias]
+	co = checkout
+	logline = log --oneline
+	amend = commit --amend
