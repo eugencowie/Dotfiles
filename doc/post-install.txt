@@ -1,0 +1,30 @@
+# https://wiki.archlinux.org/index.php/Users_and_groups#Example_adding_a_user
+
+useradd -m -G wheel fred
+passwd fred
+
+# https://wiki.archlinux.org/index.php/Sudo#Example_entries
+
+sed -i "/^# %wheel ALL=(ALL) ALL/s/^# //" /etc/sudoers
+
+# https://wiki.archlinux.org/index.php/Netctl#Wired
+
+echo "Interface=enp0s3" > /etc/netctl/wired
+echo "Connection=ethernet" >> /etc/netctl/wired
+echo "IP=dhcp" >> /etc/netctl/wired
+netctl enable wired
+netctl start wired
+
+# https://wiki.archlinux.org/index.php/Systemd-timesyncd
+
+timedatectl set-ntp true
+
+# https://wiki.archlinux.org/index.php/Uncomplicated_Firewall
+
+pacman -S ufw
+ufw default deny
+ufw allow from 192.168.0.0/24
+ufw enable
+systemctl enable ufw
+
+# vim: ft=sh:
