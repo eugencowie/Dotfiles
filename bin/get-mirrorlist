@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# https://wiki.archlinux.org/index.php/Mirrors#Server-side_ranking
+curl -s "https://www.archlinux.org/mirrorlist/?country=GB&use_mirror_status=on" | sed "s/^#//"
