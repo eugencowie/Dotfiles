@@ -2,7 +2,8 @@
 
 sxhkd &
 
-bspc monitor -d 1 2 3 4 5
+bspc monitor LVDS-1 -d 1 2 3 4 5
+bspc monitor VGA-1  -d 6 7 8 9
 
 bspc config border_width   0
 bspc config window_gap     30
