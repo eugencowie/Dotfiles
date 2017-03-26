@@ -4,21 +4,43 @@ loadkeys uk
 
 # https://wiki.archlinux.org/index.php/GNU_Parted#BIOS.2FMBR_examples
 
-parted /dev/sda mklabel msdos
-parted /dev/sda mkpart primary ext2 1MiB 201MiB
-parted /dev/sda mkpart primary ext4 201MiB 100%
-parted /dev/sda set 1 boot on
+parted /dev/sdb mklabel msdos
+parted /dev/sdb mkpart primary fat32 1MiB 14688MiB
+parted /dev/sdb mkpart primary ext2 14688MiB 100%
+
+# https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#Encrypted_boot_partition_.28GRUB.29
+
+cryptsetup luksFormat /dev/sdb2
+cryptsetup open /dev/sdb2 cryptboot
 
 # https://wiki.archlinux.org/index.php/Installation_guide#Format_the_partitions
 
-mkfs.ext2 /dev/sda1
-mkfs.ext4 /dev/sda2
+mkfs.fat -F32 /dev/sdb1
+mkfs.ext2 /dev/mapper/cryptboot
 
 # https://wiki.archlinux.org/index.php/Installation_guide#Mount_the_file_systems
 
-mount /dev/sda2 /mnt
+mount /dev/mapper/cryptboot /mnt
+
+# https://wiki.archlinux.org/index.php/Securely_wipe_disk#dd
+
+dd if=/dev/urandom of=/dev/sda bs=8M status=progress
+
+# https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#Plain_dm-crypt
+
+read -s; printf "$REPLY" | sha512sum | cut -d " " -f 1 > /mnt/crypto_keyfile.bin
+cryptsetup --cipher=serpent-xts-plain64 --key-size=512 --key-file=/mnt/crypto_keyfile.bin open --type=plain /dev/sda cryptroot
+
+# https://wiki.archlinux.org/index.php/Installation_guide#Format_the_partitions
+
+mkfs.ext4 /dev/mapper/cryptroot
+
+# https://wiki.archlinux.org/index.php/Installation_guide#Mount_the_file_systems
+
+umount /mnt
+mount /dev/mapper/cryptroot /mnt
 mkdir /mnt/boot
-mount /dev/sda1 /mnt/boot
+mount /dev/mapper/cryptboot /mnt/boot
 
 # https://wiki.archlinux.org/index.php/Mirrors#Server-side_ranking
 
@@ -49,14 +71,38 @@ arch-chroot /mnt chmod 600 /swapfile
 arch-chroot /mnt mkswap /swapfile
 arch-chroot /mnt sh -c 'echo -e "# /swapfile\n/swapfile\tnone\tswap\tdefaults\t0 0" >> /etc/fstab'
 
+# https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#Post-installation
+
+arch-chroot /mnt sed -i "\|.*/boot.*|s|rw|noauto,rw|" /etc/fstab
+
+# https://wiki.archlinux.org/index.php/Dm-crypt/Device_encryption#Keyfiles
+
+arch-chroot /mnt chmod 000 /boot/crypto_keyfile.bin
+arch-chroot /mnt chmod 600 /boot/initramfs-linux*
+arch-chroot /mnt sed -i "s|^FILES=\"|&/boot/crypto_keyfile.bin|" /etc/mkinitcpio.conf
+
+# https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#Configuring_mkinitcpio_4
+
+arch-chroot /mnt sed -i "/^HOOKS/s/keyboard //" /etc/mkinitcpio.conf
+arch-chroot /mnt sed -i "/^HOOKS/s/autodetect/& keyboard keymap/" /etc/mkinitcpio.conf
+arch-chroot /mnt sed -i "/^HOOKS/s/block/& encrypt resume/" /etc/mkinitcpio.conf
+arch-chroot /mnt mkinitcpio -p linux
+
+# https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#Encrypted_boot_partition_.28GRUB.29
+
+arch-chroot /mnt sed -i "s/^GRUB_CMDLINE_LINUX=\"\"/&\nGRUB_ENABLE_CRYPTODISK=y/" /etc/default/grub
+
 # https://wiki.archlinux.org/index.php/Power_management/Suspend_and_hibernate#Hibernation_into_swap_file
 
-arch-chroot /mnt sh -c 'sed -i "s|^GRUB_CMDLINE_LINUX=\"|&resume=/dev/sda2 resume_offset=$(filefrag -v /swapfile | awk "{if(\$1==\"0:\"){print \$4}}" | sed "s/\.//g")|" /etc/default/grub'
+arch-chroot /mnt sh -c 'sed -i "s|^GRUB_CMDLINE_LINUX=\"|& resume=/dev/mapper/cryptroot resume_offset=$(filefrag -v /swapfile | awk "{if(\$1==\"0:\"){print \$4}}" | sed "s/\.//g")|" /etc/default/grub'
 
-# https://wiki.archlinux.org/index.php/Power_management/Suspend_and_hibernate#Configure_the_initramfs
+# https://wiki.archlinux.org/index.php/Dm-crypt/Device_encryption#Keyfiles
 
-arch-chroot /mnt sed -i "/^HOOKS/s/udev/& resume/" /etc/mkinitcpio.conf
-arch-chroot /mnt mkinitcpio -p linux
+arch-chroot /mnt sed -i "s|^GRUB_CMDLINE_LINUX=\"|& cryptkey=rootfs:/boot/crypto_keyfile.bin|" /etc/default/grub
+
+# https://wiki.archlinux.org/index.php/Dm-crypt/Encrypting_an_entire_system#Configuring_the_boot_loader_5
+
+arch-chroot /mnt sed -i "s|^GRUB_CMDLINE_LINUX=\"|&cryptdevice=/dev/sda:cryptroot crypto=:serpent-xts-plain64:512::|" /etc/default/grub
 
 # https://wiki.archlinux.org/index.php/GRUB#Install_to_disk
 
@@ -67,6 +113,8 @@ arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 # https://wiki.archlinux.org/index.php/Installation_guide#Reboot
 
 umount -R /mnt
+cryptsetup close cryptboot
+cryptsetup close cryptroot
 poweroff
 
 # vim: ft=sh:
