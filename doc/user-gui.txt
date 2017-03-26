@@ -1,7 +1,7 @@
 # https://wiki.archlinux.org/index.php/Xorg
 
 sudo pacman -S xorg-server
-(cd System/sys; xorg/install)
+(cd System/sys; sudo xorg/install)
 
 # https://wiki.archlinux.org/index.php/Fonts
 
@@ -18,7 +18,7 @@ sudo aura -Ax numix-circle-icon-theme-git
 
 sudo pacman -S lightdm-gtk-greeter
 sudo systemctl enable lightdm
-(cd System/sys; lightdm/install)
+(cd System/sys; sudo lightdm/install)
 
 # https://wiki.archlinux.org/index.php/Bspwm
 
